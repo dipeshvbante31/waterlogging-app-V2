@@ -1,44 +1,21 @@
-Copyright © 2026 Dipesh Vishnu Bante. All rights reserved.
+MIT License
 
-WATERLOGGING WATCH — LICENSE AND THIRD-PARTY MATERIALS
+Copyright (c) 2026 dipeshvbante31
 
-1. Copyright in original project materials
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-Unless otherwise stated below, the original source code, application structure, templates, styles, scripts, documentation, and other original materials created for the Waterlogging Watch project (the “Project”) are copyright © 2026 Dipesh Vishnu Bante.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-All rights are reserved. No permission or license is granted to copy, reproduce, modify, adapt, publish, distribute, sublicense, or commercially exploit those original materials, in whole or in part, without prior written permission from the copyright holder, except where applicable law expressly permits otherwise.
-
-Viewing the public repository or downloading a copy for the limited purpose of reviewing the Project does not grant any broader right to reuse, modify, redistribute, or commercially exploit its original materials.
-
-2. Third-party software, services, data, and other materials
-
-This notice applies only to original materials owned by the copyright holder. It does not replace, override, or change the separate terms, licenses, or rights that apply to third-party materials used by or referenced in the Project. Such materials remain subject to their respective owners’ terms.
-
-Examples may include:
-
-- Open-Meteo weather, historical weather, forecast, and geocoding services and data, subject to the applicable Open-Meteo terms, attribution requirements, and usage restrictions. Check the current terms before use, especially for commercial use.
-- NYC Open Data / 311 service-request data, subject to the applicable NYC Open Data terms and any conditions attached to the relevant dataset.
-- Python packages, frameworks, and other third-party libraries, each subject to its own license.
-- Fonts, icons, images, and other assets, if any, subject to their own applicable licenses or terms.
-
-The above list is illustrative, not exhaustive. The presence of third-party material in, or use of a third-party service by, the Project does not mean that material is owned by Dipesh Vishnu Bante. Users are responsible for identifying and complying with the applicable third-party terms, attribution requirements, and restrictions.
-
-3. Data and model limitations
-
-The Project’s predictions, datasets, and model artifacts may have separate source, licensing, and usage conditions. No rights to third-party datasets or services are granted by this notice. Do not assume that a trained model, downloaded dataset, API response, or generated artifact can be redistributed or used commercially merely because it is used by the Project.
-
-4. No warranty
-
-The Project is provided for informational and educational purposes. To the maximum extent permitted by applicable law, the original Project materials are provided “as is,” without warranties of any kind, express or implied. Waterlogging Watch is not an official flood-warning service. Users should follow local authorities and emergency instructions.
-
-5. Permissions and contact
-
-For permission to reuse, modify, redistribute, or commercially exploit original Project materials beyond what applicable law permits, obtain prior written permission from:
-
-Dipesh Vishnu Bante
-
-No email address or other contact detail is specified in this file. Add a contact method to the repository if you want permission requests to be directed to you.
-
----
-
-This file is a copyright and permissions notice, not legal advice. Review applicable law and the current terms of third-party providers before distributing or deploying the Project.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
