@@ -9,7 +9,7 @@ A FastAPI web application that estimates short-term **waterlogging risk** from l
 trains a machine-learning model from real historical data. Final-year BE (Computer Science and Engineering) project by
 Dipesh Vishnu Bante.
 
-> **It is an informational screening tool, not an official flood warning.** Follow local authorities and emergency instructions.
+> **It is an informational screening tool, not an official flood warning.** Follow local  authorities and emergency instructions.
 
 ## What you need to know first (honest status)
 

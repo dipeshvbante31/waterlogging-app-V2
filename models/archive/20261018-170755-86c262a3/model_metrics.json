@@ -1,0 +1,454 @@
+{
+  "evaluated_at_utc": "2026-10-18T17:07:55.600506+00:00",
+  "model_version": "20261018-170755-86c262a3",
+  "model_name": "random_forest",
+  "test": {
+    "n": 76535,
+    "accuracy": 0.6200953811981447,
+    "macro_f1": 0.3907157080656578,
+    "weighted_f1": 0.6586841393015679,
+    "per_class": {
+      "Low": {
+        "precision": 0.8403836742683762,
+        "recall": 0.6955993389286755,
+        "f1": 0.7611676994406177,
+        "support": 61718
+      },
+      "Moderate": {
+        "precision": 0.20428265524625266,
+        "recall": 0.28612131663792456,
+        "f1": 0.23837336415029517,
+        "support": 13337
+      },
+      "High": {
+        "precision": 0.1051698670605613,
+        "recall": 0.4810810810810811,
+        "f1": 0.1726060606060606,
+        "support": 1480
+      }
+    },
+    "labels": [
+      "Low",
+      "Moderate",
+      "High"
+    ],
+    "confusion_matrix": [
+      [
+        42931,
+        14419,
+        4368
+      ],
+      [
+        7831,
+        3816,
+        1690
+      ],
+      [
+        323,
+        445,
+        712
+      ]
+    ],
+    "classes_present_in_truth": [
+      "Low",
+      "Moderate",
+      "High"
+    ],
+    "brier_score": 0.5037822958996843,
+    "log_loss": 0.8145878134085945,
+    "high_reliability": [
+      {
+        "bin": "0.0-0.1",
+        "n": 49188,
+        "mean_predicted": 0.03728876635103814,
+        "observed_rate": 0.005753435797348947
+      },
+      {
+        "bin": "0.1-0.2",
+        "n": 12025,
+        "mean_predicted": 0.1414993009714366,
+        "observed_rate": 0.017297297297297298
+      },
+      {
+        "bin": "0.2-0.3",
+        "n": 5532,
+        "mean_predicted": 0.24579550344257203,
+        "observed_rate": 0.026030368763557483
+      },
+      {
+        "bin": "0.3-0.4",
+        "n": 3502,
+        "mean_predicted": 0.34606767486042206,
+        "observed_rate": 0.0422615648201028
+      },
+      {
+        "bin": "0.4-0.5",
+        "n": 2496,
+        "mean_predicted": 0.44708194127988504,
+        "observed_rate": 0.06971153846153846
+      },
+      {
+        "bin": "0.5-0.6",
+        "n": 1542,
+        "mean_predicted": 0.5442964837265766,
+        "observed_rate": 0.10505836575875487
+      },
+      {
+        "bin": "0.6-0.7",
+        "n": 1102,
+        "mean_predicted": 0.6469306438211334,
+        "observed_rate": 0.13883847549909256
+      },
+      {
+        "bin": "0.7-0.8",
+        "n": 730,
+        "mean_predicted": 0.7473265937446728,
+        "observed_rate": 0.14794520547945206
+      },
+      {
+        "bin": "0.8-0.9",
+        "n": 398,
+        "mean_predicted": 0.8403631421067888,
+        "observed_rate": 0.23618090452261306
+      },
+      {
+        "bin": "0.9-1.0",
+        "n": 20,
+        "mean_predicted": 0.9128273986990589,
+        "observed_rate": 0.3
+      }
+    ]
+  },
+  "test_wet_hours": {
+    "n": 26875,
+    "accuracy": 0.3648,
+    "macro_f1": 0.3140003231308191,
+    "weighted_f1": 0.41224475805893174,
+    "per_class": {
+      "Low": {
+        "precision": 0.8212666753011268,
+        "recall": 0.3164329557363142,
+        "f1": 0.4568443804034582,
+        "support": 20039
+      },
+      "Moderate": {
+        "precision": 0.2186929246406734,
+        "recall": 0.48511537784040865,
+        "f1": 0.30147783251231525,
+        "support": 5677
+      },
+      "High": {
+        "precision": 0.10806279530559366,
+        "recall": 0.6117342536669542,
+        "f1": 0.18367875647668394,
+        "support": 1159
+      }
+    },
+    "labels": [
+      "Low",
+      "Moderate",
+      "High"
+    ],
+    "confusion_matrix": [
+      [
+        6341,
+        9482,
+        4216
+      ],
+      [
+        1287,
+        2754,
+        1636
+      ],
+      [
+        93,
+        357,
+        709
+      ]
+    ],
+    "classes_present_in_truth": [
+      "Low",
+      "Moderate",
+      "High"
+    ]
+  },
+  "baselines": {
+    "majority_class": {
+      "predicts": "Low",
+      "n": 76535,
+      "accuracy": 0.8064022996014896,
+      "macro_f1": 0.29760897292162436,
+      "weighted_f1": 0.719977680438106,
+      "per_class": {
+        "Low": {
+          "precision": 0.8064022996014896,
+          "recall": 1.0,
+          "f1": 0.8928269187648731,
+          "support": 61718
+        },
+        "Moderate": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 13337
+        },
+        "High": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 1480
+        }
+      },
+      "labels": [
+        "Low",
+        "Moderate",
+        "High"
+      ],
+      "confusion_matrix": [
+        [
+          61718,
+          0,
+          0
+        ],
+        [
+          13337,
+          0,
+          0
+        ],
+        [
+          1480,
+          0,
+          0
+        ]
+      ],
+      "classes_present_in_truth": [
+        "Low",
+        "Moderate",
+        "High"
+      ]
+    },
+    "rainfall_rule": {
+      "feature": "precip_past_3h_mm",
+      "moderate_mm": 0.1,
+      "high_mm": 5,
+      "train_macro_f1": 0.4393237877326857,
+      "n": 76535,
+      "accuracy": 0.7107075194355523,
+      "macro_f1": 0.4039927020400617,
+      "weighted_f1": 0.7095963991299395,
+      "per_class": {
+        "Low": {
+          "precision": 0.8281816862574373,
+          "recall": 0.832220745973622,
+          "f1": 0.8301963034500593,
+          "support": 61718
+        },
+        "Moderate": {
+          "precision": 0.21716772151898733,
+          "recall": 0.2058183999400165,
+          "f1": 0.21134080147823076,
+          "support": 13337
+        },
+        "High": {
+          "precision": 0.15245202558635396,
+          "recall": 0.19324324324324324,
+          "f1": 0.17044100119189512,
+          "support": 1480
+        }
+      },
+      "labels": [
+        "Low",
+        "Moderate",
+        "High"
+      ],
+      "confusion_matrix": [
+        [
+          51363,
+          9256,
+          1099
+        ],
+        [
+          10101,
+          2745,
+          491
+        ],
+        [
+          555,
+          639,
+          286
+        ]
+      ],
+      "classes_present_in_truth": [
+        "Low",
+        "Moderate",
+        "High"
+      ]
+    }
+  },
+  "cross_validation": {
+    "strategy": "forward-chaining, 3 folds, 6 h purge",
+    "candidates": {
+      "logistic_regression": {
+        "fold_macro_f1": [
+          0.3814260617873091,
+          0.38970647837491773,
+          0.39456969527395613
+        ],
+        "mean_macro_f1": 0.388567411812061,
+        "std_macro_f1": 0.005425979468187662,
+        "mean_recall_high": 0.6931016604210735
+      },
+      "random_forest": {
+        "fold_macro_f1": [
+          0.4101926366572999,
+          0.4116508077850602,
+          0.41683420239619756
+        ],
+        "mean_macro_f1": 0.4128925489461859,
+        "std_macro_f1": 0.002850033882775221,
+        "mean_recall_high": 0.592862941354567
+      },
+      "hist_gradient_boosting": {
+        "fold_macro_f1": [
+          0.39842714551730934,
+          0.39647340362831685,
+          0.40092549086000245
+        ],
+        "mean_macro_f1": 0.3986086800018762,
+        "std_macro_f1": 0.0018220842015760827,
+        "mean_recall_high": 0.5895093021264467
+      }
+    },
+    "selected": "random_forest"
+  },
+  "location_holdout": {
+    "per_unit": {
+      "Bronx": {
+        "macro_f1": 0.33799846717571286,
+        "recall_high": 0.8064516129032258,
+        "n": 15307
+      },
+      "Brooklyn": {
+        "macro_f1": 0.42096130652835656,
+        "recall_high": 0.4788135593220339,
+        "n": 15307
+      },
+      "Manhattan": {
+        "macro_f1": 0.3388053753280915,
+        "recall_high": 0.5964912280701754,
+        "n": 15307
+      },
+      "Queens": {
+        "macro_f1": 0.43954112653264676,
+        "recall_high": 0.3316645807259074,
+        "n": 15307
+      },
+      "Staten_Island": {
+        "macro_f1": 0.339691497836782,
+        "recall_high": 0.6888888888888889,
+        "n": 15307
+      }
+    },
+    "mean_macro_f1": 0.37539955468031794,
+    "note": "Each unit is held out of training entirely and scored on the test period. Units that share a weather grid cell are not independent."
+  },
+  "class_distribution": {
+    "train": {
+      "Low": 317314,
+      "Moderate": 68692,
+      "High": 8169
+    },
+    "test": {
+      "Low": 61718,
+      "Moderate": 13337,
+      "High": 1480
+    }
+  },
+  "counts": {
+    "rows_raw": 470740,
+    "rows_clean": 470740,
+    "train_records": 394175,
+    "test_records": 76535,
+    "units": [
+      "Bronx",
+      "Brooklyn",
+      "Manhattan",
+      "Queens",
+      "Staten_Island"
+    ]
+  },
+  "time_range": {
+    "first_utc": "2016-01-03T23:00:00",
+    "last_utc": "2026-09-30T18:00:00",
+    "train_last_utc": "2024-12-31T17:00:00",
+    "test_first_utc": "2025-01-01T00:00:00"
+  },
+  "per_year_positive_rate": {
+    "2016": {
+      "rows": 43565,
+      "Low": 0.8553196373235395,
+      "Moderate": 0.13125215195684609,
+      "High": 0.01342821071961437
+    },
+    "2017": {
+      "rows": 43800,
+      "Low": 0.8314155251141553,
+      "Moderate": 0.1522146118721461,
+      "High": 0.01636986301369863
+    },
+    "2018": {
+      "rows": 43800,
+      "Low": 0.756392694063927,
+      "Moderate": 0.21189497716894978,
+      "High": 0.031712328767123286
+    },
+    "2019": {
+      "rows": 43800,
+      "Low": 0.7773287671232877,
+      "Moderate": 0.1969406392694064,
+      "High": 0.025730593607305938
+    },
+    "2020": {
+      "rows": 43920,
+      "Low": 0.8410063752276867,
+      "Moderate": 0.14537795992714025,
+      "High": 0.013615664845173042
+    },
+    "2021": {
+      "rows": 43800,
+      "Low": 0.7992465753424658,
+      "Moderate": 0.17659817351598173,
+      "High": 0.024155251141552512
+    },
+    "2022": {
+      "rows": 43800,
+      "Low": 0.7950228310502283,
+      "Moderate": 0.18538812785388128,
+      "High": 0.01958904109589041
+    },
+    "2023": {
+      "rows": 43800,
+      "Low": 0.7978082191780822,
+      "Moderate": 0.17901826484018266,
+      "High": 0.02317351598173516
+    },
+    "2024": {
+      "rows": 43920,
+      "Low": 0.7917122040072859,
+      "Moderate": 0.1895719489981785,
+      "High": 0.018715846994535518
+    },
+    "2025": {
+      "rows": 43800,
+      "Low": 0.7998858447488585,
+      "Moderate": 0.18178082191780823,
+      "High": 0.018333333333333333
+    },
+    "2026": {
+      "rows": 32735,
+      "Low": 0.8151214296624408,
+      "Moderate": 0.16419734229418054,
+      "High": 0.020681228043378647
+    }
+  }
+}

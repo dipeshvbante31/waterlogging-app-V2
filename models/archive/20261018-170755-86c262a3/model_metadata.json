@@ -1,0 +1,321 @@
+{
+  "model_version": "20261018-170755-86c262a3",
+  "model_name": "random_forest",
+  "trained_at_utc": "2026-10-18T17:07:55.600506+00:00",
+  "model_file": "waterlogging_model.joblib",
+  "model_sha256": "86c262a363a35bcfe13bdbccfde5c68d1bdaa4046c7702a6468d79d6a72047a7",
+  "feature_schema_version": "1",
+  "features": [
+    "precip_current_mm",
+    "precip_past_3h_mm",
+    "precip_past_24h_mm",
+    "precip_past_72h_mm",
+    "temperature_c",
+    "humidity_pct",
+    "wind_speed_kmh"
+  ],
+  "feature_specs": {
+    "precip_current_mm": {
+      "label": "Rain in the last hour",
+      "unit": "mm"
+    },
+    "precip_past_3h_mm": {
+      "label": "Rain in the last 3 hours",
+      "unit": "mm"
+    },
+    "precip_past_24h_mm": {
+      "label": "Rain in the last 24 hours",
+      "unit": "mm"
+    },
+    "precip_past_72h_mm": {
+      "label": "Rain in the last 72 hours",
+      "unit": "mm"
+    },
+    "temperature_c": {
+      "label": "Air temperature",
+      "unit": "\u00b0C"
+    },
+    "humidity_pct": {
+      "label": "Relative humidity",
+      "unit": "%"
+    },
+    "wind_speed_kmh": {
+      "label": "Wind speed",
+      "unit": "km/h"
+    }
+  },
+  "classes": [
+    "High",
+    "Low",
+    "Moderate"
+  ],
+  "class_order": [
+    "Low",
+    "Moderate",
+    "High"
+  ],
+  "target": {
+    "name": "reported_waterlogging_level_next_6h",
+    "definition": "Number of observed incident reports created in the 6 hours starting at the feature timestamp, for the same unit. Low = 0 reports; Moderate = 1..3; High = >= 4.",
+    "thresholds": {
+      "moderate_min": 1,
+      "high_min": 4,
+      "high_quantile": 0.9
+    },
+    "threshold_rule": "High threshold = 90th percentile of non-zero window counts, computed on the training period only."
+  },
+  "dataset": {
+    "manifest": {
+      "dataset_name": "nyc_street_flooding_reports",
+      "created_utc": "2026-10-18T17:03:08.802644+00:00",
+      "time_range": {
+        "start": "2016-01-01",
+        "end": "2026-09-30"
+      },
+      "region": {
+        "name": "New York City, USA (five boroughs)",
+        "max_distance_km": 25.0,
+        "points": [
+          {
+            "unit_id": "Manhattan",
+            "latitude": 40.7831,
+            "longitude": -73.9712
+          },
+          {
+            "unit_id": "Brooklyn",
+            "latitude": 40.6782,
+            "longitude": -73.9442
+          },
+          {
+            "unit_id": "Queens",
+            "latitude": 40.7282,
+            "longitude": -73.7949
+          },
+          {
+            "unit_id": "Bronx",
+            "latitude": 40.8448,
+            "longitude": -73.8648
+          },
+          {
+            "unit_id": "Staten_Island",
+            "latitude": 40.5795,
+            "longitude": -74.1502
+          }
+        ]
+      },
+      "sources": [
+        {
+          "name": "Open-Meteo Historical Weather API (hourly ERA5-based reanalysis)",
+          "url": "https://open-meteo.com/en/docs/historical-weather-api",
+          "licence": "Data CC BY 4.0; the free API is for non-commercial use only (check open-meteo.com/en/terms)",
+          "variables": [
+            "precipitation",
+            "temperature_2m",
+            "relative_humidity_2m",
+            "wind_speed_10m"
+          ]
+        },
+        {
+          "name": "NYC Open Data, 311 Service Requests (datasets 76ig-c548 for 2010-2019 and erm2-nwe9 for 2020 onward)",
+          "url": "https://data.cityofnewyork.us/",
+          "licence": "NYC Open Data Terms of Use (check data.cityofnewyork.us for current terms)",
+          "filter": {
+            "complaint_type": "Sewer",
+            "descriptor_like": "Street Flooding%"
+          }
+        }
+      ],
+      "feature_window": "rain over the last 1/3/24/72 hours plus temperature, humidity and wind at the sample hour",
+      "label_window_hours": 6,
+      "assembly_reports": [
+        {
+          "unit_id": "Manhattan",
+          "hours_total": 94224,
+          "hours_dropped_incomplete": 76,
+          "hours_kept": 94148,
+          "events_in_kept_hours": 15588
+        },
+        {
+          "unit_id": "Brooklyn",
+          "hours_total": 94224,
+          "hours_dropped_incomplete": 76,
+          "hours_kept": 94148,
+          "events_in_kept_hours": 59766
+        },
+        {
+          "unit_id": "Queens",
+          "hours_total": 94224,
+          "hours_dropped_incomplete": 76,
+          "hours_kept": 94148,
+          "events_in_kept_hours": 79200
+        },
+        {
+          "unit_id": "Bronx",
+          "hours_total": 94224,
+          "hours_dropped_incomplete": 76,
+          "hours_kept": 94148,
+          "events_in_kept_hours": 16794
+        },
+        {
+          "unit_id": "Staten_Island",
+          "hours_total": 94224,
+          "hours_dropped_incomplete": 76,
+          "hours_kept": 94148,
+          "events_in_kept_hours": 31356
+        }
+      ],
+      "rows": 470740,
+      "total_events_in_rows": 202704,
+      "weather_resolution_note": "Reanalysis weather is gridded (about 10 km); boroughs/units share grid cells and are not independent."
+    },
+    "file": "nyc_street_flooding_reports.csv",
+    "file_sha256": "178980fae75ac46200b7b053ff66f5649f2e4c477e023ef1a094dacfd52410f8",
+    "counts": {
+      "rows_raw": 470740,
+      "rows_clean": 470740,
+      "train_records": 394175,
+      "test_records": 76535,
+      "units": [
+        "Bronx",
+        "Brooklyn",
+        "Manhattan",
+        "Queens",
+        "Staten_Island"
+      ]
+    },
+    "time_range": {
+      "first_utc": "2016-01-03T23:00:00",
+      "last_utc": "2026-09-30T18:00:00",
+      "train_last_utc": "2024-12-31T17:00:00",
+      "test_first_utc": "2025-01-01T00:00:00"
+    },
+    "cleaning_report": {
+      "rows_in": 470740,
+      "dropped_missing_or_unparseable": 0,
+      "dropped_duplicate_unit_hour": 0,
+      "dropped_out_of_range": 0,
+      "dropped_inconsistent_rain_windows": 0,
+      "rows_out": 470740
+    }
+  },
+  "split": {
+    "strategy": "chronological hold-out",
+    "test_start": "2025-01-01",
+    "purge_hours": 6,
+    "description": "Train on rows before 2025-01-01 minus a 6-hour purge; test on rows on/after it. Model selection used forward-chaining CV inside the training period. Preprocessing is part of the fitted pipeline (fit on training rows only)."
+  },
+  "selection": {
+    "metric": "mean macro-F1 over forward-chaining CV folds (tie-break: recall of High)",
+    "cv_folds": 3,
+    "candidates": {
+      "logistic_regression": {
+        "fold_macro_f1": [
+          0.3814260617873091,
+          0.38970647837491773,
+          0.39456969527395613
+        ],
+        "mean_macro_f1": 0.388567411812061,
+        "std_macro_f1": 0.005425979468187662,
+        "mean_recall_high": 0.6931016604210735
+      },
+      "random_forest": {
+        "fold_macro_f1": [
+          0.4101926366572999,
+          0.4116508077850602,
+          0.41683420239619756
+        ],
+        "mean_macro_f1": 0.4128925489461859,
+        "std_macro_f1": 0.002850033882775221,
+        "mean_recall_high": 0.592862941354567
+      },
+      "hist_gradient_boosting": {
+        "fold_macro_f1": [
+          0.39842714551730934,
+          0.39647340362831685,
+          0.40092549086000245
+        ],
+        "mean_macro_f1": 0.3986086800018762,
+        "std_macro_f1": 0.0018220842015760827,
+        "mean_recall_high": 0.5895093021264467
+      }
+    },
+    "selected": "random_forest"
+  },
+  "applicability": {
+    "name": "New York City, USA (five boroughs)",
+    "max_distance_km": 25.0,
+    "points": [
+      {
+        "unit_id": "Manhattan",
+        "latitude": 40.7831,
+        "longitude": -73.9712
+      },
+      {
+        "unit_id": "Brooklyn",
+        "latitude": 40.6782,
+        "longitude": -73.9442
+      },
+      {
+        "unit_id": "Queens",
+        "latitude": 40.7282,
+        "longitude": -73.7949
+      },
+      {
+        "unit_id": "Bronx",
+        "latitude": 40.8448,
+        "longitude": -73.8648
+      },
+      {
+        "unit_id": "Staten_Island",
+        "latitude": 40.5795,
+        "longitude": -74.1502
+      }
+    ]
+  },
+  "feature_importance": {
+    "precip_current_mm": {
+      "mean_drop_in_macro_f1": -0.0006797044566665078,
+      "std": 0.0014242237894268556
+    },
+    "precip_past_3h_mm": {
+      "mean_drop_in_macro_f1": 0.003607043833751533,
+      "std": 0.001005809083696303
+    },
+    "precip_past_24h_mm": {
+      "mean_drop_in_macro_f1": 0.0028440623921467067,
+      "std": 0.0018738970412444898
+    },
+    "precip_past_72h_mm": {
+      "mean_drop_in_macro_f1": 0.00561150895394501,
+      "std": 0.002736506307513239
+    },
+    "temperature_c": {
+      "mean_drop_in_macro_f1": 0.010045257928419881,
+      "std": 0.0030550097274739643
+    },
+    "humidity_pct": {
+      "mean_drop_in_macro_f1": 0.0005298906571111317,
+      "std": 0.0016797285405758164
+    },
+    "wind_speed_kmh": {
+      "mean_drop_in_macro_f1": 0.0017003776045500963,
+      "std": 0.00173549053473453
+    }
+  },
+  "environment": {
+    "python": "3.14.6",
+    "scikit_learn": "1.8.0",
+    "numpy": "2.4.4",
+    "pandas": "3.0.2",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "random_seed": 42,
+  "scores_are_calibrated_probabilities": false,
+  "limitations": [
+    "Labels are reported incidents (e.g. citizen complaints), which reflect reporting behaviour as well as water on the street.",
+    "Rainfall comes from a gridded reanalysis at training time and from a forecast model at prediction time; the two differ.",
+    "The model only knows weather. Drainage capacity, terrain, tides, land cover and maintenance are not inputs.",
+    "The model is only valid in the region listed under 'applicability'.",
+    "Offline test metrics do not guarantee real-world accuracy."
+  ]
+}
