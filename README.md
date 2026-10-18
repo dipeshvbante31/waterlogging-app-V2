@@ -1,4 +1,9 @@
 # Waterlogging Watch
+<div align="center">
+🌧️ Waterlogging Watch
+Weather-driven waterlogging risk screening powered by FastAPI and machine learning
+A final-year BE Computer Science & Engineering project by Dipesh Vishnu Bante
+</div>
 
 A FastAPI web application that estimates short-term **waterlogging risk** from live weather, with an offline pipeline that
 trains a machine-learning model from real historical data. Final-year BE (Computer Science and Engineering) project by
@@ -221,3 +226,14 @@ headers, body-size and rate limits, generic 500 responses, no secrets in the rep
 ## Responsible use
 
 Treat every result as an estimate. Use official weather and flood warnings, and follow emergency services, when making safety decisions.
+
+
+© Copyright and Licensing
+Copyright © 2026 Dipesh Vishnu Bante. All rights reserved.
+The original Waterlogging Watch project code, application structure, interface implementation, documentation, and project-specific materials are the work of Dipesh Vishnu Bante, except where otherwise stated.
+- No permission is granted to copy, republish, redistribute, or commercially use the original project code or materials without prior written permission from the copyright holder.
+- This notice does not claim ownership of third-party software, libraries, APIs, datasets, trademarks, or other materials referenced by this project. Those remain subject to their respective owners' licences and terms.
+- Open-Meteo data/API usage and NYC Open Data usage are subject to the terms described in Data Sources and Licences. Review current provider terms before redistribution or commercial use.
+- If you want to reuse this project, contact the copyright holder and obtain permission first.
+Project author: Dipesh Vishnu Bante
+GitHub: github.com/dipeshvbante31
