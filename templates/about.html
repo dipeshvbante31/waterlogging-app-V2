@@ -1,0 +1,188 @@
+
+{% extends "base.html" %}
+{% block title %}About · Waterlogging Watch{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow">About Our Project</p>
+  <h1>About Waterlogging Watch</h1>
+  <p class="lead">
+    A final-year engineering project that estimates short-term
+    waterlogging risk using weather data and machine learning,
+    while clearly communicating its capabilities and limitations.
+  </p>
+</section>
+
+<section class="grid grid-2">
+  <article class="card">
+    <h2>Project Information</h2>
+    <dl class="kv kv-wide">
+      <dt>Project Name</dt>
+      <dd>Waterlogging Watch</dd>
+
+      <dt>College</dt>
+      <dd>KGCE</dd>
+
+      <dt>Department</dt>
+      <dd>Computer Science and Engineering (CSE)</dd>
+
+      <dt>Project Guide</dt>
+      <dd>Grish Dakhave</dd>
+
+      <dt>Academic Year</dt>
+      <dd>2026–2027</dd>
+
+      <dt>GitHub Repository</dt>
+      <dd>
+        <a
+          href="https://github.com/dipeshvbante31/Student-Dropout-Risk-Prediction"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          View Project on GitHub
+        </a>
+      </dd>
+    </dl>
+  </article>
+
+  <article class="card prose">
+    <h2>Purpose and Users</h2>
+    <p>
+      Waterlogging Watch aims to provide an accessible indication of
+      whether current and forecast rainfall may increase waterlogging
+      risk. It uses weather information and machine learning to support
+      awareness and informed decision-making.
+    </p>
+    <p>
+      The application is intended for residents, commuters, students,
+      and people interested in applied machine learning. It is an
+      informational screening tool and does not replace official
+      weather alerts, flood warnings, or emergency instructions.
+    </p>
+  </article>
+</section>
+
+<section class="card">
+  <h2>Meet the Development Team</h2>
+  <p class="muted">
+    The team collaborated to design, develop, analyse, and test
+    the Waterlogging Watch application.
+  </p>
+
+  <div class="grid grid-2">
+    <article class="card">
+      <h3>Yash Bonde</h3>
+      <p class="muted">UI/UX Design</p>
+      <p>
+        Responsible for user interface design, user experience,
+        visual consistency, and application usability.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3>Samyak Ahiwale</h3>
+      <p class="muted">Backend Development</p>
+      <p>
+        Responsible for backend functionality, application logic,
+        API integration, and server-side processing.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3>Dipesh Vishnu Bante</h3>
+      <p class="muted">Data Analysis and Testing</p>
+      <p>
+        Responsible for data analysis, model evaluation,
+        prediction validation, and application testing.
+      </p>
+    </article>
+
+    <article class="card">
+      <h3>Saad Adhal</h3>
+      <p class="muted">Frontend Development</p>
+      <p>
+        Responsible for frontend implementation, page structure,
+        interactive elements, and integration with the backend.
+      </p>
+    </article>
+  </div>
+</section>
+
+<section class="grid grid-2">
+  <article class="card prose">
+    <h2>Technology Stack</h2>
+    <ul>
+      <li>Python and FastAPI for backend development</li>
+      <li>Jinja2 for server-rendered HTML templates</li>
+      <li>HTML5, CSS3, and vanilla JavaScript for the frontend</li>
+      <li>Pandas and NumPy for data processing</li>
+      <li>Scikit-learn and Joblib for machine learning and model persistence</li>
+      <li>SQLAlchemy with SQLite or PostgreSQL for prediction history</li>
+      <li>Open-Meteo APIs for weather forecasts and historical weather data</li>
+    </ul>
+  </article>
+
+  <article class="card prose">
+    <h2>Data Sources</h2>
+    <ul>
+      <li>
+        <strong>Open-Meteo:</strong>
+        Provides weather forecasts, live weather information,
+        and historical weather data.
+      </li>
+      <li>
+        <strong>NYC Open Data:</strong>
+        Provides 311 service requests used as an observed-outcome
+        data source in the training pipeline.
+      </li>
+    </ul>
+    <p class="muted small">
+      Data availability, licensing, and provider terms should be
+      verified before commercial or large-scale use.
+    </p>
+  </article>
+</section>
+
+<section class="card prose">
+  <h2>Limitations and Responsible Use</h2>
+  <ul>
+    <li>
+      Weather data does not provide street-level measurements of
+      water accumulation.
+    </li>
+    <li>
+      Drainage capacity, blocked drains, terrain, tides, and road
+      closures may not be represented in the predictions.
+    </li>
+    <li>
+      Service requests may reflect reporting behaviour as well as
+      actual waterlogging conditions.
+    </li>
+    <li>
+      A model trained on one geographical area may not generalise
+      reliably to another area.
+    </li>
+    <li>
+      Historical validation results do not guarantee future
+      prediction accuracy.
+    </li>
+    <li>
+      Always follow official weather alerts, local authority
+      advisories, and emergency instructions.
+    </li>
+  </ul>
+</section>
+
+<section class="card prose">
+  <h2>Academic Project</h2>
+  <p>
+    Developed by the Computer Science and Engineering team at KGCE
+    under the guidance of Grish Dakhave for the academic year
+    2026–2027.
+  </p>
+  <p class="muted small">
+    Waterlogging Watch is an academic project intended for
+    educational, analytical, and informational purposes.
+  </p>
+</section>
+{% endblock %}

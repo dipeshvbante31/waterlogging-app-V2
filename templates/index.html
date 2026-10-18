@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Live Weather · Waterlogging Watch{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Live weather risk</p>
+  <h1>Know the rain.<br><span>Plan your day.</span></h1>
+  <p class="lead">Check current weather and a waterlogging risk estimate for your city or neighbourhood. The result always states whether it came from a trained model or from a simple weather-based fallback.</p>
+</section>
+
+<section class="card search-card" aria-labelledby="search-title">
+  <label id="search-title" for="location-input">Where do you want to check?</label>
+  <form id="search-form" novalidate>
+    <input id="location-input" name="location" type="text" minlength="2" maxlength="120" required
+           placeholder="Search a city or area (e.g. Mumbai)" autocomplete="off" aria-describedby="search-hint">
+    <button id="check-button" class="button" type="submit">Check risk</button>
+  </form>
+  <p id="search-hint" class="muted small">Try Mumbai, Andheri, Pune or your local area. No map is used; places are looked up by name.</p>
+</section>
+
+{% include "partials/live_result.html" %}
+
+<section class="grid grid-2 link-cards">
+  <a class="card link-card" href="/predict"><strong>Manual Prediction</strong><span>Enter weather values yourself, without searching for a place.</span></a>
+  <a class="card link-card" href="/how-it-works"><strong>How It Works</strong><span>What data is used, how the model is trained, and what it cannot know.</span></a>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', path='/live.js') }}" defer></script>{% endblock %}

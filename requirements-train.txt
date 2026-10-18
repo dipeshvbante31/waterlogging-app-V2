@@ -1,0 +1,4 @@
+# Only needed on the machine that prepares data and trains the model (not for serving).
+-r requirements.txt
+pandas>=2.1
+tzdata        # IANA time zones on Windows

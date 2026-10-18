@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Waterlogging Watch: a weather-based waterlogging risk screening tool.">
+  <title>{% block title %}Waterlogging Watch{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='/logo.svg') }}">
+  <script src="{{ url_for('static', path='/theme.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="/" aria-label="Waterlogging Watch home">
+        <img src="{{ url_for('static', path='/logo.svg') }}" alt="" width="36" height="36">
+        <span class="brand-text"><strong>Waterlogging</strong><small>WATCH</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav id="site-nav" class="site-nav" aria-label="Main">
+        <ul>
+          {% for key, href, label in nav %}
+          <li><a href="{{ href }}"{% if active == key %} class="active" aria-current="page"{% endif %}>{{ label }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+      <button class="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Switch theme">
+        <span aria-hidden="true">◐</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p class="footer-copy">{{ copyright }}</p>
+      <p class="footer-note">{{ disclaimer }}</p>
+      <p class="footer-note">Weather data by <a href="https://open-meteo.com/" rel="noopener">Open-Meteo.com</a> (CC BY 4.0). Version {{ app_version }}.</p>
+    </div>
+  </footer>
+  <script src="{{ url_for('static', path='/site.js') }}" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

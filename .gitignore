@@ -1,0 +1,19 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+# local data and databases
+data/*
+!data/README.md
+*.db
+*.sqlite3
+# trained artefacts are generated locally; commit them only deliberately
+models/*.joblib
+models/*.tmp
+models/archive/
+.DS_Store
+*.zip
+models/model_metadata.json
+models/model_metrics.json

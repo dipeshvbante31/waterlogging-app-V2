@@ -1,0 +1,55 @@
+{# Rendered by static/live.js on the Live Weather page and the Dashboard. Every id is filled client-side from /api/predict. #}
+<div id="live-message" class="notice" role="status" aria-live="polite" hidden></div>
+<div id="live-loading" class="notice notice-info" role="status" hidden>Fetching live weather…</div>
+
+<section id="live-results" class="live-results" hidden aria-live="polite">
+  <div class="result-heading">
+    <div>
+      <p class="eyebrow">Location</p>
+      <h2 id="place-name">—</h2>
+      <p id="place-subtitle" class="muted"></p>
+    </div>
+    <div class="badges">
+      <span id="data-status" class="badge" title="Freshness of the weather data">—</span>
+      <span id="method-badge" class="badge badge-method">—</span>
+    </div>
+  </div>
+
+  <p id="data-note" class="notice notice-warn" hidden></p>
+  <p id="fallback-note" class="notice notice-info" hidden></p>
+
+  <div id="risk-panel" class="risk-panel risk-low">
+    <p class="eyebrow">Estimated waterlogging risk</p>
+    <div class="risk-main"><h3 id="risk-level">—</h3><p id="risk-index" class="muted"></p></div>
+    <p id="risk-advice" class="risk-advice"></p>
+    <div id="model-scores" class="score-row" hidden></div>
+    <h4 class="small-title">What this estimate used</h4>
+    <ul id="reasons" class="chip-list"></ul>
+    <p id="factor-note" class="muted small"></p>
+    <p id="method-explainer" class="muted small"></p>
+  </div>
+
+  <div class="section-title"><h3>Conditions right now</h3><span id="observed-at" class="muted small"></span></div>
+  <div class="grid grid-4">
+    <article class="card stat"><p>Temperature</p><strong id="temperature">—</strong></article>
+    <article class="card stat"><p>Humidity</p><strong id="humidity">—</strong></article>
+    <article class="card stat"><p>Rain in the last hour</p><strong id="precipitation">—</strong></article>
+    <article class="card stat"><p>Wind speed</p><strong id="wind">—</strong></article>
+  </div>
+
+  <div class="section-title"><h3>Rainfall indicators</h3></div>
+  <div class="grid grid-4">
+    <article class="card stat"><p>Last 3 hours</p><strong id="past-3h">—</strong></article>
+    <article class="card stat"><p>Last 24 hours</p><strong id="past-24h">—</strong></article>
+    <article class="card stat"><p>Last 72 hours</p><strong id="past-72h">—</strong></article>
+    <article class="card stat"><p>Peak rain probability (next 6 h)</p><strong id="rain-probability">—</strong></article>
+  </div>
+
+  <div class="section-title"><h3>Next 6 hours</h3><span class="muted small">Forecast total: <strong id="next-rain">—</strong></span></div>
+  <div class="card">
+    <div id="forecast-bars" class="bars" role="img" aria-label="Forecast rainfall for each of the next six hours"></div>
+    <p id="forecast-empty" class="muted" hidden>Hourly forecast values were not available.</p>
+  </div>
+
+  <p id="disclaimer" class="muted small"></p>
+</section>

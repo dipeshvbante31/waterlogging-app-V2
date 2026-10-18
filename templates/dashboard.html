@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Waterlogging Watch{% endblock %}
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow">Overview</p>
+  <h1>Dashboard</h1>
+  <p class="lead">A quick view of the latest conditions for the place you last checked, and the status of the prediction model. Nothing on this page is sample data.</p>
+</section>
+
+<div id="dash-root">
+  <div class="section-title"><h2>Selected location</h2>
+    <button id="dash-refresh" class="button button-secondary" type="button" hidden>Refresh</button></div>
+  <div id="dash-empty" class="card empty-state" hidden>
+    <h3>No location selected yet</h3>
+    <p>Search for a place on the Live Weather page and it will appear here the next time you open the dashboard. The last place is remembered only in this browser.</p>
+    <p><a class="button" href="/">Go to Live Weather</a></p>
+  </div>
+  {% include "partials/live_result.html" %}
+</div>
+
+<div class="section-title"><h2>System status</h2></div>
+<div class="grid grid-3">
+  <article class="card">
+    <p class="eyebrow">Prediction model</p>
+    {% if model.status == "loaded" %}
+      <p class="status-line"><span class="dot dot-ok"></span><strong>Trained model in use</strong></p>
+      <dl class="kv">
+        <dt>Algorithm</dt><dd>{{ model.name }}</dd>
+        <dt>Version</dt><dd>{{ model.version }}</dd>
+        <dt>Last trained</dt><dd>{{ model.trained_at|fmt_dt }}</dd>
+        {% if coverage %}<dt>Covers</dt><dd>{{ coverage.name }}</dd>{% endif %}
+      </dl>
+      <p class="muted small">Locations outside the covered area use the labelled fallback.</p>
+    {% else %}
+      <p class="status-line"><span class="dot dot-warn"></span><strong>Using fallback only</strong></p>
+      <p class="muted">{{ model.detail or "No trained model is installed." }}</p>
+      <p class="muted small">Predictions are labelled “Weather-based fallback (heuristic)”. See <a href="/model-performance">Model Performance</a> for how to train one.</p>
+    {% endif %}
+  </article>
+  <article class="card">
+    <p class="eyebrow">Weather data freshness</p>
+    <p id="dash-freshness" class="muted">Shown above once a location is loaded.</p>
+    <dl class="kv">
+      <dt>Last successful retrieval (this server)</dt><dd>{{ last_weather_success|fmt_dt }}</dd>
+      {% if last_weather_error %}<dt>Last provider error</dt><dd>{{ last_weather_error }}</dd>{% endif %}
+    </dl>
+  </article>
+  <article class="card">
+    <p class="eyebrow">Explore</p>
+    <ul class="plain-list">
+      <li><a href="/">Live Weather</a></li>
+      <li><a href="/predict">Manual Prediction</a></li>
+      <li><a href="/how-it-works">How It Works</a></li>
+      <li><a href="/model-performance">Model Performance</a></li>
+    </ul>
+  </article>
+</div>
+
+<div class="section-title"><h2>Saved prediction history</h2></div>
+{% if not history_available %}
+  <div class="card empty-state"><p>The history database is unavailable, so saved predictions are not shown. The rest of the application works normally.</p></div>
+{% elif stats.total == 0 %}
+  <div class="card empty-state"><h3>No predictions saved yet</h3><p>Run a live or manual prediction and it will be recorded here. Charts appear once there are enough genuine records.</p></div>
+{% else %}
+  <div class="grid grid-2">
+    <article class="card">
+      <p class="eyebrow">Recent predictions</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>When</th><th>Source</th><th>Place</th><th>Risk</th><th>Method</th></tr></thead>
+        <tbody>
+        {% for r in history %}
+          <tr><td>{{ r.created_at|fmt_dt }}</td><td>{{ r.source }}</td><td>{{ r.location_name or "—" }}</td>
+              <td><span class="pill pill-{{ r.risk_level|lower }}">{{ r.risk_level }}</span></td>
+              <td>{{ "Trained model" if r.method == "trained_model" else "Fallback" }}</td></tr>
+        {% endfor %}
+        </tbody></table></div>
+    </article>
+    <article class="card">
+      <p class="eyebrow">Risk categories across {{ stats.total }} saved predictions</p>
+      {% if show_distribution %}
+        {% set widest = stats.by_risk.values()|max %}
+        <svg class="dist" viewBox="0 0 340 130" role="img" aria-label="Number of saved predictions per risk category">
+          {% for c in classes %}
+            {% set n = stats.by_risk.get(c, 0) %}
+            <text x="0" y="{{ 28 + loop.index0 * 38 }}" class="dist-label">{{ c }}</text>
+            <rect x="80" y="{{ 12 + loop.index0 * 38 }}" width="{{ (n / widest * 200) if widest else 0 }}" height="22" rx="4" class="bar-{{ c|lower }}"></rect>
+            <text x="{{ 86 + (n / widest * 200 if widest else 0) }}" y="{{ 28 + loop.index0 * 38 }}" class="dist-value">{{ n }}</text>
+          {% endfor %}
+        </svg>
+        <p class="muted small">These are counts of predictions people requested, not of real waterlogging events.</p>
+      {% else %}
+        <p class="muted">The distribution is shown once at least 5 predictions have been saved ({{ stats.total }} so far).</p>
+      {% endif %}
+    </article>
+  </div>
+{% endif %}
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', path='/live.js') }}" defer></script>{% endblock %}

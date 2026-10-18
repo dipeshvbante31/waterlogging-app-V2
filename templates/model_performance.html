@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Model Performance · Waterlogging Watch{% endblock %}
+{% macro f3(x) %}{% if x is none %}—{% else %}{{ "%.3f"|format(x) }}{% endif %}{% endmacro %}
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow">Evaluation</p>
+  <h1>Model Performance</h1>
+  <p class="lead">Offline validation results for the model currently deployed. Every number on this page is read from files written by the real training run; nothing is hard-coded.</p>
+</section>
+
+{% if not metrics %}
+<section class="card empty-state">
+  <h2>Evaluation metrics are not available</h2>
+  {% if inconsistent %}
+    <p>The metrics file and the model metadata describe different model versions, so neither is shown. Re-run training to regenerate both.</p>
+  {% else %}
+    <p>No trained and evaluated model has been installed, so there is nothing honest to display yet. Until then every prediction uses the labelled weather-based fallback.</p>
+  {% endif %}
+  <p>To create one, on your own computer run:</p>
+  <pre><code>python scripts/prepare_dataset.py
+python scripts/train_model.py</code></pre>
+  <p class="muted small">Training stops without saving anything if the data cannot support a valid model (for example, too few observed events). See the README for details.</p>
+</section>
+{% else %}
+{% set t = metrics.test %}
+{% if state.status != "loaded" %}
+<p class="notice notice-warn">These metrics belong to the model files on disk, but that model is <strong>not in use</strong>: {{ state.detail }}</p>
+{% endif %}
+
+<div class="grid grid-4">
+  <article class="card stat"><p>Selected model</p><strong class="stat-text">{{ meta.model_name }}</strong><small>version {{ meta.model_version }}</small></article>
+  <article class="card stat"><p>Macro F1 (test)</p><strong>{{ f3(t.macro_f1) }}</strong><small>main selection metric</small></article>
+  <article class="card stat"><p>Recall, High class</p><strong>{{ f3(t.per_class.High.recall) }}</strong><small>{{ t.per_class.High.support }} High examples</small></article>
+  <article class="card stat"><p>Accuracy (test)</p><strong>{{ f3(t.accuracy) }}</strong><small>can mislead when classes are imbalanced</small></article>
+</div>
+
+<div class="grid grid-4 gap-top">
+  <article class="card stat"><p>Weighted F1</p><strong>{{ f3(t.weighted_f1) }}</strong></article>
+  <article class="card stat"><p>Training records</p><strong>{{ "{:,}".format(meta.dataset.counts.train_records) }}</strong></article>
+  <article class="card stat"><p>Test records</p><strong>{{ "{:,}".format(meta.dataset.counts.test_records) }}</strong></article>
+  <article class="card stat"><p>Trained at</p><strong class="stat-text">{{ meta.trained_at_utc|fmt_dt }}</strong></article>
+</div>
+
+<p class="notice notice-info">These are <strong>offline</strong> results on a held-out later period of the training data. They do not measure live performance and do not guarantee real-world accuracy, especially outside the area the model was trained for.</p>
+
+<section class="grid grid-2">
+  <article class="card">
+    <h2>Per-class results (test period)</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th>Support</th></tr></thead>
+      <tbody>{% for c in classes %}{% set m = t.per_class[c] %}
+        <tr><td><span class="pill pill-{{ c|lower }}">{{ c }}</span></td><td>{{ f3(m.precision) }}</td><td>{{ f3(m.recall) }}</td><td>{{ f3(m.f1) }}</td><td>{{ m.support }}</td></tr>
+      {% endfor %}</tbody></table></div>
+  </article>
+  <article class="card">
+    <h2>Confusion matrix</h2>
+    <p class="muted small">Rows are the true class, columns the predicted class. Shading shows the share of each true class.</p>
+    <table class="cm">
+      <thead><tr><th></th>{% for c in classes %}<th>Predicted {{ c }}</th>{% endfor %}<th>Total</th></tr></thead>
+      <tbody>{% for row in cm_rows %}
+        <tr><th scope="row">True {{ row.label }}</th>
+          {% for cell in row.cells %}<td class="cm-l{{ cell.level }}"><strong>{{ "{:,}".format(cell.n) }}</strong><small>{{ cell.share }}%</small></td>{% endfor %}
+          <td>{{ "{:,}".format(row.total) }}</td></tr>
+      {% endfor %}</tbody></table>
+  </article>
+</section>
+
+<section class="card">
+  <h2>Does the model beat simple baselines?</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Approach (test period)</th><th>Macro F1</th><th>High recall</th><th>Accuracy</th></tr></thead>
+    <tbody>
+      <tr><td><strong>{{ meta.model_name }}</strong> (selected)</td><td>{{ f3(t.macro_f1) }}</td><td>{{ f3(t.per_class.High.recall) }}</td><td>{{ f3(t.accuracy) }}</td></tr>
+      {% for key, label in (("majority_class", "Always predict the most common class"), ("rainfall_rule", "Single rainfall threshold (last 3 h)")) %}
+      {% set b = metrics.baselines[key] %}
+      {% if b %}<tr><td>{{ label }}</td><td>{{ f3(b.macro_f1) }}</td><td>{{ f3(b.per_class.High.recall) }}</td><td>{{ f3(b.accuracy) }}</td></tr>{% endif %}
+      {% endfor %}
+    </tbody></table></div>
+  <p class="muted small">If the model is not clearly better than a rainfall threshold, its extra complexity is not justified.</p>
+</section>
+
+<section class="grid grid-2">
+  <article class="card">
+    <h2>How the model was chosen</h2>
+    <p class="muted small">{{ meta.selection.metric }}. {{ metrics.cross_validation.strategy }}.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Candidate</th><th>Mean macro F1</th><th>± std</th><th>High recall</th></tr></thead>
+      <tbody>{% for name, c in metrics.cross_validation.candidates.items() %}
+        <tr{% if name == meta.model_name %} class="row-selected"{% endif %}><td>{{ name }}{% if name == meta.model_name %} ✓{% endif %}</td>
+        <td>{{ f3(c.mean_macro_f1) }}</td><td>{{ f3(c.std_macro_f1) }}</td><td>{{ f3(c.mean_recall_high) }}</td></tr>
+      {% endfor %}</tbody></table></div>
+  </article>
+  <article class="card">
+    <h2>Class distribution</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Class</th><th>Training</th><th>Test</th></tr></thead>
+      <tbody>{% for c in classes %}<tr><td>{{ c }}</td><td>{{ "{:,}".format(metrics.class_distribution.train[c]) }}</td><td>{{ "{:,}".format(metrics.class_distribution.test[c]) }}</td></tr>{% endfor %}</tbody></table></div>
+    <p class="muted small">Waterlogging reports are rare, so most hours are “Low”. Accuracy alone would look high even for a model that always says Low; that is why macro F1 and High-class recall are emphasised.</p>
+  </article>
+</section>
+
+<section class="card prose">
+  <h2>Data, target and splitting</h2>
+  <dl class="kv kv-wide">
+    <dt>Target</dt><dd>{{ meta.target.definition }}</dd>
+    <dt>Threshold rule</dt><dd>{{ meta.target.threshold_rule }}</dd>
+    <dt>Split strategy</dt><dd>{{ meta.split.description }}</dd>
+    <dt>Data range</dt><dd>{{ metrics.time_range.first_utc|fmt_dt }} to {{ metrics.time_range.last_utc|fmt_dt }} (test period from {{ metrics.time_range.test_first_utc|fmt_dt }})</dd>
+    <dt>Coverage area</dt><dd>{{ meta.applicability.name }}</dd>
+    <dt>Units (locations)</dt><dd>{{ meta.dataset.counts.units|join(", ") }}</dd>
+    <dt>Dataset file</dt><dd>{{ meta.dataset.file }} (SHA-256 {{ meta.dataset.file_sha256[:12] }}…)</dd>
+  </dl>
+  {% set mf = meta.dataset.manifest %}
+  {% if mf and mf.sources %}
+  <h3>Sources</h3>
+  <ul>{% for s in mf.sources %}<li><strong>{{ s.name }}</strong>{% if s.licence %} — licence: {{ s.licence }}{% endif %}{% if s.url %} — <a href="{{ s.url }}" rel="noopener">{{ s.url }}</a>{% endif %}</li>{% endfor %}</ul>
+  {% else %}<p class="muted">Dataset source details were not recorded (no manifest was supplied at training time).</p>{% endif %}
+</section>
+
+{% if metrics.location_holdout %}
+<section class="card">
+  <h2>Unseen-location check</h2>
+  <p class="muted small">{{ metrics.location_holdout.note }}</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Held-out unit</th><th>Macro F1</th><th>High recall</th><th>Rows</th></tr></thead>
+    <tbody>{% for u, v in metrics.location_holdout.per_unit.items() %}<tr><td>{{ u }}</td><td>{{ f3(v.macro_f1) }}</td><td>{{ f3(v.recall_high) }}</td><td>{{ "{:,}".format(v.n) }}</td></tr>{% endfor %}</tbody></table></div>
+</section>
+{% endif %}
+
+<section class="card prose">
+  <h2>Confidence is not probability</h2>
+  <p>The class scores the model can output are uncalibrated: a score of 0.8 does not mean an 80% chance of waterlogging. {% if t.brier_score is defined %}For reference, the multiclass Brier score on the test period is {{ f3(t.brier_score) }}{% if t.log_loss is not none %} and the log loss is {{ f3(t.log_loss) }}{% endif %} (lower is better).{% endif %} The app therefore never presents them as probabilities.</p>
+  <h2>Limitations and known biases</h2>
+  <ul>{% for l in meta.limitations %}<li>{{ l }}</li>{% endfor %}</ul>
+</section>
+{% endif %}
+{% endblock %}

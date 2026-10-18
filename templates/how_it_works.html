@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}How It Works · Waterlogging Watch{% endblock %}
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow">Method</p>
+  <h1>How It Works</h1>
+  <p class="lead">From a place name to a risk estimate, and what each step can and cannot tell you.</p>
+</section>
+
+<ol class="flow" aria-label="Workflow">
+  <li><strong>1. Place or values</strong><span>Search a place, or type weather values yourself.</span></li>
+  <li><strong>2. Weather data</strong><span>Open-Meteo geocoding and forecast APIs.</span></li>
+  <li><strong>3. Validation</strong><span>Ranges, units and missing values are checked.</span></li>
+  <li><strong>4. Prediction</strong><span>Trained model if valid, otherwise a labelled fallback.</span></li>
+  <li><strong>5. Risk category</strong><span>Low, Moderate or High, with the reasons shown.</span></li>
+</ol>
+
+<section class="card prose">
+  <h2>The steps in detail</h2>
+  <h3>1. Location selection or manual input</h3>
+  <p>On the Live Weather page a place name is turned into coordinates by the Open-Meteo Geocoding API. On the Manual Prediction page you provide the numbers yourself, so no location or network is involved.</p>
+  <h3>2. Historical dataset preparation (offline)</h3>
+  <p>Before the app can use a model, the developer runs <code>scripts/prepare_dataset.py</code> on their own computer. It downloads hourly historical weather and a record of <em>observed</em> street-flooding reports, aligns them in time, and writes a training table. There is no upload feature on this website; training data never passes through it.</p>
+  <h3>3. Weather data retrieval</h3>
+  <p>Live requests ask Open-Meteo for current conditions, the last three days of hourly rain and the next two days of forecast. Every response is labelled <strong>live</strong>, <strong>cached</strong> (a recent copy) or <strong>stale</strong> (older data shown only because the provider failed). If nothing usable exists, the app says so instead of showing made-up values.</p>
+  <h3>4. Feature validation and preprocessing</h3>
+  <p>Values must be in a sensible range, and the rainfall windows must be consistent (rain in the last 3 hours cannot exceed rain in the last 24). Missing values are never silently set to zero. Rainfall is log-transformed (and, for the linear model, scaled) inside the saved pipeline, which was fitted on training rows only.</p>
+  <h3>5. Model training and selection (offline)</h3>
+  <p><code>scripts/train_model.py</code> compares logistic regression, a random forest and gradient boosting. Models are chosen by macro F1 on forward-chaining time-series validation inside the training period, then scored once on a later, untouched test period. Two simple baselines (always predict the most common class; a single rainfall threshold) are reported next to the model so you can see whether it adds anything.</p>
+  <h3>6. Prediction generation</h3>
+  <p>Both the live page and the manual page call the same prediction service. The trained model is used only when it loads and passes integrity checks, every model input is available, <em>and</em> the location is inside the area it was trained for. Otherwise a transparent heuristic is used. The result always names the method and, for a fallback, the reason.</p>
+  <h3>7. Risk categorisation</h3>
+  <p>The model predicts one of three classes. The fallback computes a 0–100 <em>weather risk index</em> from current rain, forecast rain and rain probability, and maps it to Low, Moderate or High with fixed thresholds. The index is not a probability.</p>
+  <h3>8. Model evaluation</h3>
+  <p>See <a href="/model-performance">Model Performance</a>. Figures there are read from files written by the real training run; if no model has been trained, the page says metrics are unavailable. Offline results measure how the model did on past data and do not guarantee real-world accuracy.</p>
+  <h3>9. Limitations, freshness and responsible use</h3>
+  <p>Treat every result as a screening estimate, never as an official warning. Follow local authorities and emergency instructions.</p>
+</section>
+
+<section class="grid grid-2">
+  <article class="card prose">
+    <h2>Three different things</h2>
+    <dl class="kv kv-wide">
+      <dt>Weather forecast</dt><dd>A prediction of rainfall and other weather made by a meteorological model. It says nothing about drains or streets.</dd>
+      <dt>Waterlogging risk estimate</dt><dd>This app’s output: how likely conditions are to coincide with reported street flooding, learned from past weather and past reports (or a simple rule when no model applies).</dd>
+      <dt>Confirmed waterlogging</dt><dd>An observation that water actually collected somewhere, from a sensor or a report. The app cannot confirm this.</dd>
+    </dl>
+    <h3>Why rainfall alone is not enough</h3>
+    <p>Heavy rain can fall with no waterlogging, and moderate rain can cause it. The outcome depends on drainage capacity and blockages, terrain and low-lying ground, tides, ground saturation, land cover and local works. Weather alone cannot see most of these.</p>
+  </article>
+  <article class="card prose">
+    <h2>Factors used today</h2>
+    <p><strong>Trained model (all required):</strong></p>
+    <ul>{% for f in model_features %}<li>{{ f.label }} ({{ f.unit }})</li>{% endfor %}</ul>
+    <p><strong>Fallback heuristic:</strong></p>
+    <ul>{% for f in fallback_features %}<li>{{ f.label }} ({{ f.unit }})</li>{% endfor %}</ul>
+    <p><strong>Not implemented:</strong> drainage capacity or blockages, terrain and elevation, tide levels, soil and land cover, and local infrastructure.</p>
+  </article>
+</section>
+
+<section class="card prose">
+  <h2>Training data and where the model applies</h2>
+  <p>The training pipeline in this project is built around two public sources: the Open-Meteo Historical Weather API (hourly reanalysis weather) and the City of New York’s public 311 service-request records, from which street-flooding complaints are counted as the observed outcome. Because those reports exist only for New York City, a model trained from them describes New York City, not Mumbai or anywhere else. The app therefore uses the model only inside its documented coverage area and uses the labelled fallback elsewhere.</p>
+  {% if model.status == "loaded" and coverage %}
+    <p class="notice notice-info">Currently installed model: version {{ model.version }}, covering <strong>{{ coverage.name }}</strong>.{% if target %} Target: {{ target }}{% endif %}</p>
+  {% else %}
+    <p class="notice notice-info">No trained model is currently installed ({{ model.detail or model.status }}). All predictions use the labelled fallback.</p>
+  {% endif %}
+  <p>No open, time-stamped record of observed waterlogging for Mumbai was found. Supplying one (see the README for the exact schema) would allow a model for that area to be trained with the same pipeline.</p>
+</section>
+{% endblock %}

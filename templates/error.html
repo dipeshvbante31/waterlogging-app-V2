@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} · Waterlogging Watch{% endblock %}
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow">Error {{ status }}</p>
+  <h1>{{ title }}</h1>
+  <p class="lead">{{ message }}</p>
+  <p><a class="button" href="/">Back to Live Weather</a></p>
+</section>
+{% endblock %}

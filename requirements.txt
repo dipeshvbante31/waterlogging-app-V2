@@ -1,0 +1,11 @@
+# Web application (everything needed to run the site; works with or without a trained model)
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
+jinja2>=3.1,<4.0
+python-multipart>=0.0.9
+httpx>=0.27,<1.0
+sqlalchemy>=2.0,<3.0
+numpy>=1.26
+joblib>=1.3
+scikit-learn>=1.4,<2.0
+python-dotenv>=1.0

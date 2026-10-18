@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Manual Prediction · Waterlogging Watch{% endblock %}
+
+{% macro field(name) %}
+  {% set spec = specs[name] %}
+  {% set err = errors.get(name) %}
+  <div class="field{% if err %} has-error{% endif %}">
+    <label for="f-{{ name }}">{{ spec.label }} <span class="unit">({{ spec.unit }})</span>
+      {% if name in model_fields %}<span class="tag" title="Required by the trained model">Model input</span>{% endif %}</label>
+    <input id="f-{{ name }}" name="{{ name }}" type="number" inputmode="decimal" min="{{ spec.minimum }}" max="{{ spec.maximum }}"
+           step="{{ spec.step }}" value="{{ values.get(name, '') }}" aria-describedby="d-{{ name }}{% if err %} e-{{ name }}{% endif %}"
+           {% if err %}aria-invalid="true"{% endif %}>
+    <p id="d-{{ name }}" class="help">{{ spec.description }} Allowed: {{ spec.minimum }} to {{ spec.maximum }} {{ spec.unit }}.</p>
+    {% if err %}<p id="e-{{ name }}" class="error" role="alert">{{ err }}</p>{% endif %}
+  </div>
+{% endmacro %}
+
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow">No live data needed</p>
+  <h1>Manual Prediction</h1>
+  <p class="lead">Type in weather values and get a risk estimate. At least current rainfall or the 6-hour forecast rainfall is required. Fields marked <span class="tag">Model input</span> are all needed for the trained model; without them the weather-based fallback is used, and the result says so.</p>
+</section>
+
+{% if model.status != "loaded" %}
+<p class="notice notice-info">No trained model is currently available ({{ model.detail or model.status }}). Manual predictions will use the weather-based fallback and be labelled that way.</p>
+{% endif %}
+
+{% if errors.get("__all__") %}<p class="notice notice-warn" role="alert">{{ errors["__all__"] }}</p>{% endif %}
+{% if errors and not errors.get("__all__") %}<p class="notice notice-warn" role="alert">Please correct the highlighted fields.</p>{% endif %}
+
+<form id="manual-form" class="card form-card" method="post" action="/predict" novalidate>
+  {% for title, names in groups %}
+  <fieldset>
+    <legend>{{ title }}</legend>
+    <div class="grid grid-2">{% for n in names %}{{ field(n) }}{% endfor %}</div>
+  </fieldset>
+  {% endfor %}
+
+  <fieldset>
+    <legend>Where do these readings apply?</legend>
+    <div class="field">
+      <label for="f-model_area">Area</label>
+      <select id="f-model_area" name="model_area" aria-describedby="d-area" {% if model.status != "loaded" %}disabled{% endif %}>
+        <option value="other"{% if values.get("model_area", "other") != "covered" %} selected{% endif %}>Somewhere else, or not sure</option>
+        {% if coverage %}<option value="covered"{% if values.get("model_area") == "covered" %} selected{% endif %}>Inside the model’s training area: {{ coverage.name }}</option>{% endif %}
+      </select>
+      <p id="d-area" class="help">The trained model learned from one area only{% if coverage %} ({{ coverage.name }}){% endif %}. It is used only if you say the readings are for that area; otherwise the fallback is used.</p>
+    </div>
+  </fieldset>
+
+  <div class="form-actions">
+    <button class="button" type="submit">Predict risk</button>
+    <a class="button button-secondary" href="/predict">Reset form</a>
+    <a class="button button-link" href="/">Back to Live Weather</a>
+  </div>
+</form>
+
+{% if result %}
+<section id="result" class="card result-card" aria-labelledby="result-title" tabindex="-1">
+  <div class="result-heading">
+    <div><p class="eyebrow">Result</p><h2 id="result-title">{{ result.risk_level }} risk</h2></div>
+    <span class="badge badge-method">{{ result.method_label }}</span>
+  </div>
+  <div class="risk-panel risk-{{ result.risk_level|lower }}">
+    {% if result.risk_index is defined %}
+      <p><strong>{{ result.risk_index }}/100</strong> <span class="muted">{{ result.risk_index_label }}</span></p>
+    {% endif %}
+    {% if result.model_scores %}
+      <div class="score-row">
+        {% for c, v in result.model_scores.items() %}<span class="chip">{{ c }}: {{ "%.0f"|format(v * 100) }}%</span>{% endfor %}
+      </div>
+      <p class="muted small">{{ result.model_score_note }}</p>
+    {% endif %}
+    <p class="risk-advice">{{ result.advice }}</p>
+  </div>
+  {% if result.fallback_message %}<p class="notice notice-info">{{ result.fallback_message }}</p>{% endif %}
+  {% for n in result.notes %}<p class="notice notice-info">{{ n }}</p>{% endfor %}
+  <h3 class="small-title">What this estimate used</h3>
+  <ul class="chip-list">{% for r in result.reasons %}<li class="chip">{{ r }}</li>{% endfor %}</ul>
+  {% if result.factor_note %}<p class="muted small">{{ result.factor_note }}</p>{% endif %}
+  {% if result.model_version %}<p class="muted small">Model version: {{ result.model_version }}</p>{% endif %}
+  <h3 class="small-title">Limitations</h3>
+  <ul class="plain-list small">{% for l in result.limitations %}<li>{{ l }}</li>{% endfor %}</ul>
+  <p class="muted small">{{ disclaimer }}</p>
+</section>
+{% endif %}
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', path='/manual.js') }}" defer></script>{% endblock %}
